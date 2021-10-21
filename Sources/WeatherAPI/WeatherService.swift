@@ -11,13 +11,25 @@ public final class WeatherService {
     private enum Endpoint {
         case points(latitude: Double, longitude: Double)
 
-        func buildRequest(baseURL: URLConvertible, headers: HTTPHeaders) throws -> URLRequest {
+        case forecast(office: String, gridX: Int, gridY: Int)
+
+        func buildRequest(baseURL: URLConvertible, headers: [HTTPHeader]) throws -> URLRequest {
             switch self {
             case .points(let latitude, let longitude):
-                let coordinate = String(format: "%.4f,%.4f", latitude, longitude)
+                let coordinate = String(format: "%0.4f,%0.4f", latitude, longitude)
                 let url = try baseURL.asURL()
                     .appendingPathComponent("points")
                     .appendingPathComponent(coordinate)
+
+                return try URLRequest(url: url, method: .get, headers: headers)
+
+            case .forecast(let office, let gridX, let gridY):
+                let coordinate = String(format: "%d,%d", gridX, gridY)
+                let url = try baseURL.asURL()
+                    .appendingPathComponent("gridpoints")
+                    .appendingPathComponent(office)
+                    .appendingPathComponent(coordinate)
+                    .appendingPathComponent("forecast")
 
                 return try URLRequest(url: url, method: .get, headers: headers)
             }
@@ -28,9 +40,9 @@ public final class WeatherService {
 
     private let baseURL: URLConvertible
 
-    private let headers: HTTPHeaders = [
-        "User-Agent": "(rocketinsights.com, paul@rocketinsights.com)",
-        "Accept": "application/geo+json"
+    private let headers: [HTTPHeader] = [
+        .init(name: "User-Agent", value: "(rocketinsights.com, paul@rocketinsights.com)"),
+        .init(name: "Accept", value: "application/geo+json"),
     ]
 
     public init() {
@@ -77,6 +89,14 @@ public final class WeatherService {
 extension WeatherService {
 
     public func points(latitude: Double, longitude: Double) async throws -> Feature<Point> {
-        return try await fetchSingleFeature(from: .points(latitude: latitude, longitude: longitude))
+        try await fetchSingleFeature(from: .points(latitude: latitude, longitude: longitude))
+    }
+
+    public func forecast(for point: Point) async throws -> Feature<GridpointForecast> {
+        try await forecast(officeId: point.forecastOfficeId, gridX: point.gridX, gridY: point.gridY)
+    }
+
+    public func forecast(officeId: String, gridX: Int, gridY: Int) async throws -> Feature<GridpointForecast> {
+        try await fetchSingleFeature(from: .forecast(office: officeId, gridX: gridX, gridY: gridY))
     }
 }

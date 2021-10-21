@@ -29,12 +29,22 @@ enum HTTPMethod: String {
     case get
 }
 
-typealias HTTPHeaders = [String: String]
+struct HTTPHeader {
+    var name: String
+    var value: String
+}
 
 extension URLRequest {
-    init(url: URLConvertible, method: HTTPMethod, headers: HTTPHeaders?) throws {
-        self.init(url: try url.asURL())
+    init(url: URLConvertible,
+         method: HTTPMethod,
+         headers: [HTTPHeader]?,
+         cachePolicy: URLRequest.CachePolicy = .reloadIgnoringLocalAndRemoteCacheData)
+    throws {
+        self.init(url: try url.asURL(), cachePolicy: cachePolicy)
         httpMethod = method.rawValue
-        allHTTPHeaderFields = headers
+
+        headers?.forEach {
+            setValue($0.value, forHTTPHeaderField: $0.name)
+        }
     }
 }
