@@ -1,13 +1,17 @@
 import Foundation
 import MapKit
 
-public struct GeoJSONFeature<PropertiesType> where PropertiesType: Decodable {
+/**
+ Wraps an `MKGeoJSONFeature` to automatically decode its associated `properties` value.
+ */
+public struct Feature<PropertiesType> where PropertiesType: Decodable {
 
     enum Error: Swift.Error {
         case missingProperties
     }
 
-    public var feature: MKGeoJSONFeature
+    // Keep the underlying feature private, expose its properties directly in this type.
+    private let feature: MKGeoJSONFeature
 
     public var properties: PropertiesType
 
@@ -26,5 +30,13 @@ public struct GeoJSONFeature<PropertiesType> where PropertiesType: Decodable {
         }
 
         properties = try JSONDecoder().decode(PropertiesType.self, from: data)
+    }
+
+    public var geometry: [MKShape & MKGeoJSONObject] {
+        feature.geometry
+    }
+
+    public var identifier: String? {
+        feature.identifier
     }
 }
