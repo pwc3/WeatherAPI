@@ -1,8 +1,8 @@
 import Foundation
 
-public struct GridpointForecast: Decodable {
+public struct GridpointForecast: Decodable, Equatable {
 
-    public enum UnitType: String, Decodable {
+    public enum UnitType: String, Decodable, Equatable {
         case us
         case si
     }

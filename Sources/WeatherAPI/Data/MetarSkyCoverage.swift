@@ -1,6 +1,6 @@
 import Foundation
 
-public enum MetarSkyCoverage: String, Decodable {
+public enum MetarSkyCoverage: String, Decodable, Equatable {
 
     case OVC
 

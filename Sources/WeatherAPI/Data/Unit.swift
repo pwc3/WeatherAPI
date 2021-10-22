@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Unit: Decodable {
+public struct Unit: Decodable, Equatable {
 
     public enum Namespace: String {
         case wmo, uc, wmoUnit, nwsUnit

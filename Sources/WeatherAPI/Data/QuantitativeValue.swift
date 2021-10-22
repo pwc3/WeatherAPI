@@ -1,6 +1,6 @@
 import Foundation
 
-public struct QuantitativeValue: Decodable {
+public struct QuantitativeValue: Decodable, Equatable {
 
     public var value: Double?
 

@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Point: Decodable {
+public struct Point: Decodable, Equatable {
 
     private var cwa: String
 

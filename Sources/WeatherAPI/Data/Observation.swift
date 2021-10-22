@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Observation: Decodable {
+public struct Observation: Decodable, Equatable {
 
     public var timestamp: String
 

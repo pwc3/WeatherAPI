@@ -1,12 +1,12 @@
 import Foundation
 
-public struct GridpointForecastPeriod: Decodable {
+public struct GridpointForecastPeriod: Decodable, Equatable {
 
-    public enum TemperatureTrend: String, Decodable {
+    public enum TemperatureTrend: String, Decodable, Equatable {
         case rising, falling
     }
 
-    public enum WindDirection: String, Decodable {
+    public enum WindDirection: String, Decodable, Equatable {
         case N, NNE, NE, ENE, E, ESE, SE, SSE, S, SSW, SW, WSW, W, WNW, NW, NNW
     }
 

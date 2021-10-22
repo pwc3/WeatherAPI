@@ -1,6 +1,6 @@
 import Foundation
 
-public struct ObservationStation: Decodable {
+public struct ObservationStation: Decodable, Equatable {
 
     public var stationIdentifier: String
 
