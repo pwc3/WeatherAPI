@@ -38,4 +38,13 @@ class WeatherServiceTests: XCTestCase {
         let forecast = feature.properties
         print(forecast)
     }
+
+    func testStations() async throws {
+        let featureCollection = try await service.stations(officeId: "BOX", gridX: 71, gridY: 76)
+        let stations = featureCollection.features.map {
+            $0.properties
+        }
+
+        print(stations)
+    }
 }

@@ -16,8 +16,11 @@ public final class WeatherService {
 
         case hourlyForecast(office: String, gridX: Int, gridY: Int)
 
+        case stations(office: String, gridX: Int, gridY: Int)
+
         func buildRequest(baseURL: URLConvertible, headers: [HTTPHeader]) throws -> URLRequest {
             switch self {
+
             case .points(let latitude, let longitude):
                 let coordinate = String(format: "%0.4f,%0.4f", latitude, longitude)
                 let url = try baseURL.asURL()
@@ -44,6 +47,16 @@ public final class WeatherService {
                     .appendingPathComponent(coordinate)
                     .appendingPathComponent("forecast")
                     .appendingPathComponent("hourly")
+
+                return try URLRequest(url: url, method: .get, headers: headers)
+
+            case .stations(let office, let gridX, let gridY):
+                let coordinate = String(format: "%d,%d", gridX, gridY)
+                let url = try baseURL.asURL()
+                    .appendingPathComponent("gridpoints")
+                    .appendingPathComponent(office)
+                    .appendingPathComponent(coordinate)
+                    .appendingPathComponent("stations")
 
                 return try URLRequest(url: url, method: .get, headers: headers)
             }
@@ -110,5 +123,13 @@ extension WeatherService {
 
     public func hourlyForecast(officeId: String, gridX: Int, gridY: Int) async throws -> Feature<GridpointForecast> {
         try await fetchJSON(from: .hourlyForecast(office: officeId, gridX: gridX, gridY: gridY))
+    }
+
+    public func stations(for point: Point) async throws -> FeatureCollection<ObservationStation> {
+        try await stations(officeId: point.forecastOfficeId, gridX: point.gridX, gridY: point.gridY)
+    }
+
+    public func stations(officeId: String, gridX: Int, gridY: Int) async throws -> FeatureCollection<ObservationStation> {
+        try await fetchJSON(from: .stations(office: officeId, gridX: gridX, gridY: gridY))
     }
 }
