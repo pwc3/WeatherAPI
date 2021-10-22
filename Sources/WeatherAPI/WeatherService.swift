@@ -18,6 +18,8 @@ public final class WeatherService {
 
         case stations(office: String, gridX: Int, gridY: Int)
 
+        case latestObservation(station: String)
+
         func buildRequest(baseURL: URLConvertible, headers: [HTTPHeader]) throws -> URLRequest {
             switch self {
 
@@ -57,6 +59,15 @@ public final class WeatherService {
                     .appendingPathComponent(office)
                     .appendingPathComponent(coordinate)
                     .appendingPathComponent("stations")
+
+                return try URLRequest(url: url, method: .get, headers: headers)
+
+            case .latestObservation(let station):
+                let url = try baseURL.asURL()
+                    .appendingPathComponent("stations")
+                    .appendingPathComponent(station)
+                    .appendingPathComponent("observations")
+                    .appendingPathComponent("latest")
 
                 return try URLRequest(url: url, method: .get, headers: headers)
             }
@@ -131,5 +142,13 @@ extension WeatherService {
 
     public func stations(officeId: String, gridX: Int, gridY: Int) async throws -> FeatureCollection<ObservationStation> {
         try await fetchJSON(from: .stations(office: officeId, gridX: gridX, gridY: gridY))
+    }
+
+    public func latestObservation(for station: ObservationStation) async throws -> Feature<Observation> {
+        try await latestObservation(stationId: station.stationIdentifier)
+    }
+
+    public func latestObservation(stationId: String) async throws -> Feature<Observation> {
+        try await fetchJSON(from: .latestObservation(station: stationId))
     }
 }

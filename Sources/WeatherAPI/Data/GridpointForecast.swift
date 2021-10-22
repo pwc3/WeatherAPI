@@ -1,8 +1,13 @@
 import Foundation
 
 public struct GridpointForecast: Decodable {
+
+    public enum UnitType: String, Decodable {
+        case us
+        case si
+    }
     
-    public var units: String
+    public var units: UnitType
 
     public var generatedAt: String
 

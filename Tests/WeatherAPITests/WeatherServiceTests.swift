@@ -47,4 +47,11 @@ class WeatherServiceTests: XCTestCase {
 
         print(stations)
     }
+
+    func testLatestObservation() async throws {
+        let feature = try await service.latestObservation(stationId: "KBOS")
+        let observation = feature.properties
+
+        print(observation)
+    }
 }
