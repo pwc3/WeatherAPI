@@ -13,4 +13,6 @@ public struct Point: Decodable {
     public var gridX: Int
 
     public var gridY: Int
+
+    public var radarStation: String
 }

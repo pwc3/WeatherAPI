@@ -24,10 +24,18 @@ class ServiceTests: XCTestCase {
         XCTAssertEqual(point.gridId, "BOX")
         XCTAssertEqual(point.gridX, 71)
         XCTAssertEqual(point.gridY, 76)
+        XCTAssertEqual(point.radarStation, "KBOX")
     }
 
     func testForecast() async throws {
         let feature = try await service.forecast(officeId: "BOX", gridX: 71, gridY: 76)
-        let _ = feature.properties
+        let forecast = feature.properties
+        print(forecast)
+    }
+
+    func testHourlyForecast() async throws {
+        let feature = try await service.hourlyForecast(officeId: "BOX", gridX: 71, gridY: 76)
+        let forecast = feature.properties
+        print(forecast)
     }
 }
