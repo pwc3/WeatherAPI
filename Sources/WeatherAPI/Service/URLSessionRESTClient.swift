@@ -42,6 +42,6 @@ public class URLSessionRESTClient: RESTClient {
             Log.service.debug("Received JSON for \(urlRequest): \(string)")
         }
 
-        return try JSONDecoder().decode(ResponseType.self, from: data)
+        return try JSONDecoder.configuredDecoder().decode(ResponseType.self, from: data)
     }
 }

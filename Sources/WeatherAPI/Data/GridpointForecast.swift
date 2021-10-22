@@ -9,11 +9,11 @@ public struct GridpointForecast: Decodable, Equatable {
     
     public var units: UnitType
 
-    public var generatedAt: String
+    public var generatedAt: Date
 
-    public var updateTime: String
+    public var updateTime: Date
 
-    public var validTimes: String
+    public var validTimes: ISO8601Interval
 
     public var elevation: QuantitativeValue
 

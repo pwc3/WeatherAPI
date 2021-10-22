@@ -8,7 +8,7 @@ class ObservationStationTests: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        let featureCollection = try JSONDecoder().decode(FeatureCollection<ObservationStation>.self, from: Self.example.data(using: .utf8)!)
+        let featureCollection = try JSONDecoder.configuredDecoder().decode(FeatureCollection<ObservationStation>.self, from: Self.example.data(using: .utf8)!)
         observationStations = featureCollection.features.map {
             $0.properties
         }

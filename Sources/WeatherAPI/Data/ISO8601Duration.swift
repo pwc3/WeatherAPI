@@ -1,0 +1,71 @@
+import Foundation
+
+public struct ISO8601Duration: Equatable {
+
+    public var components: DateComponents
+
+    public var rawValue: String
+
+    public init(rawValue: String) throws {
+        self.components = try Self.parse(rawValue)
+        self.rawValue = rawValue
+    }
+
+    private static func parse(_ input: String) throws -> DateComponents {
+        let fullInput = NSRange(location: 0, length: input.count)
+        let regex = try! NSRegularExpression(pattern:
+                                             #"^P((?<years>\d+)Y)?"# +
+                                             #"((?<months>\d+)M)?"# +
+                                             #"((?<days>\d+)D)?"# +
+                                             #"(T"# +
+                                             #"((?<hours>\d+)H)?"# +
+                                             #"((?<minutes>\d+)M)?"# +
+                                             #"((?<seconds>\d+)S)?"# +
+                                             #")?$"#, options: [])
+        let matches = regex.matches(in: input, options: [], range: fullInput)
+
+        guard matches.count == 1, let match = matches.first else {
+            throw DataError.malformedInput
+        }
+
+        let segments: [(String, Calendar.Component)] = [
+            ("years", .year),
+            ("months", .month),
+            ("days", .day),
+            ("hours", .hour),
+            ("minutes", .minute),
+            ("seconds", .second)
+        ]
+
+        var result = DateComponents()
+        for (rangeName, component) in segments {
+            let matchRange = match.range(withName: rangeName)
+            if matchRange.location == NSNotFound {
+                continue
+            }
+
+            guard let substringRange = Range(matchRange, in: input) else {
+                throw DataError.malformedInput
+            }
+
+            let stringValue = String(input[substringRange])
+            guard let intValue = Int(stringValue) else {
+                throw DataError.malformedInput
+            }
+
+            result.setValue(intValue, for: component)
+        }
+
+        return result
+    }
+
+    public var negatedComponents: DateComponents {
+        var result = DateComponents()
+        for cc: Calendar.Component in [.year, .month, .day, .hour, .minute, .second] {
+            components.value(for: cc).map {
+                result.setValue($0, for: cc)
+            }
+        }
+        return result
+    }
+}

@@ -14,9 +14,9 @@ public struct GridpointForecastPeriod: Decodable, Equatable {
 
     public var name: String
 
-    public var startTime: String
+    public var startTime: Date
 
-    public var endTime: String
+    public var endTime: Date
 
     public var isDaytime: Bool
 

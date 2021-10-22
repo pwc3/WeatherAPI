@@ -8,7 +8,7 @@ class PointTests: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        let feature = try JSONDecoder().decode(Feature<Point>.self, from: Self.example.data(using: .utf8)!)
+        let feature = try JSONDecoder.configuredDecoder().decode(Feature<Point>.self, from: Self.example.data(using: .utf8)!)
         point = feature.properties
     }
 
