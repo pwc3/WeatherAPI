@@ -1,7 +1,8 @@
 import Foundation
-import MapKit
 
 public final class WeatherService {
+
+    private static let logIncomingJSON = true
 
     public enum Error: Swift.Error {
         case invalidResponse
@@ -63,8 +64,8 @@ public final class WeatherService {
         baseURL = "https://api.weather.gov/"
     }
 
-    private func fetchSingleFeature<PropertyType>(from endpoint: Endpoint) async throws -> Feature<PropertyType>
-    where PropertyType: Decodable
+    private func fetchJSON<T>(from endpoint: Endpoint) async throws -> T
+    where T: Decodable
     {
         let request = try endpoint.buildRequest(baseURL: baseURL, headers: headers)
 
@@ -72,19 +73,6 @@ public final class WeatherService {
         let (data, response) = try await session.data(for: request)
         Log.service.debug("Received \(data.count) byte(s) for \(request)")
 
-        let jsonObjects = try geoJSON(data: data, response: response)
-        guard
-            jsonObjects.count == 1,
-            let feature = jsonObjects.first as? MKGeoJSONFeature
-        else {
-            Log.service.error("Invalid response received from \(request)")
-            throw Error.invalidResponse
-        }
-
-        return try Feature(feature: feature)
-    }
-
-    private func geoJSON(data: Data, response: URLResponse) throws -> [MKGeoJSONObject] {
         guard let httpResponse = response as? HTTPURLResponse else {
             throw Error.invalidResponse
         }
@@ -92,8 +80,11 @@ public final class WeatherService {
             throw Error.errorStatusCode(httpResponse.statusCode)
         }
 
-        let decoder = MKGeoJSONDecoder()
-        return try decoder.decode(data)
+        if Self.logIncomingJSON, let string = String(data: data, encoding: .utf8) {
+            Log.service.debug("Received JSON for \(request): \(string)")
+        }
+
+        return try JSONDecoder().decode(T.self, from: data)
     }
 }
 
@@ -102,7 +93,7 @@ public final class WeatherService {
 extension WeatherService {
 
     public func points(latitude: Double, longitude: Double) async throws -> Feature<Point> {
-        try await fetchSingleFeature(from: .points(latitude: latitude, longitude: longitude))
+        try await fetchJSON(from: .points(latitude: latitude, longitude: longitude))
     }
 
     public func forecast(for point: Point) async throws -> Feature<GridpointForecast> {
@@ -110,7 +101,7 @@ extension WeatherService {
     }
 
     public func forecast(officeId: String, gridX: Int, gridY: Int) async throws -> Feature<GridpointForecast> {
-        try await fetchSingleFeature(from: .forecast(office: officeId, gridX: gridX, gridY: gridY))
+        try await fetchJSON(from: .forecast(office: officeId, gridX: gridX, gridY: gridY))
     }
 
     public func hourlyForecast(for point: Point) async throws -> Feature<GridpointForecast> {
@@ -118,6 +109,6 @@ extension WeatherService {
     }
 
     public func hourlyForecast(officeId: String, gridX: Int, gridY: Int) async throws -> Feature<GridpointForecast> {
-        try await fetchSingleFeature(from: .hourlyForecast(office: officeId, gridX: gridX, gridY: gridY))
+        try await fetchJSON(from: .hourlyForecast(office: officeId, gridX: gridX, gridY: gridY))
     }
 }

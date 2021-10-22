@@ -2,7 +2,7 @@ import Foundation
 import WeatherAPI
 import XCTest
 
-class ServiceTests: XCTestCase {
+class WeatherServiceTests: XCTestCase {
 
     private var service: WeatherService!
 
