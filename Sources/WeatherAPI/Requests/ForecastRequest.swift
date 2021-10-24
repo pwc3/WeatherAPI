@@ -2,7 +2,7 @@ import Foundation
 
 struct ForecastRequest: Request {
 
-    typealias ResponseType = Feature<Point>
+    typealias ResponseType = Feature<GridpointForecast>
 
     var officeId: String
 
@@ -24,11 +24,11 @@ struct ForecastRequest: Request {
 
 public extension WeatherService {
 
-    func forecast(for point: Point) async throws -> Feature<Point> {
+    func forecast(for point: Point) async throws -> Feature<GridpointForecast> {
         try await forecast(officeId: point.forecastOfficeId, gridX: point.gridX, gridY: point.gridY)
     }
 
-    func forecast(officeId: String, gridX: Int, gridY: Int) async throws -> Feature<Point> {
+    func forecast(officeId: String, gridX: Int, gridY: Int) async throws -> Feature<GridpointForecast> {
         try await client.perform(request: ForecastRequest(officeId: officeId, gridX: gridX, gridY: gridY))
     }
 }
