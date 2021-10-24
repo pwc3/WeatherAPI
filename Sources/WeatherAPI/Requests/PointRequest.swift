@@ -1,6 +1,6 @@
 import Foundation
 
-struct PointsRequest: Request {
+struct PointRequest: Request {
 
     typealias ResponseType = Feature<Point>
 
@@ -20,7 +20,7 @@ struct PointsRequest: Request {
 
 public extension WeatherService {
 
-    func points(latitude: Double, longitude: Double) async throws -> Feature<Point> {
-        try await client.perform(request: PointsRequest(latitude: latitude, longitude: longitude))
+    func point(latitude: Double, longitude: Double) async throws -> Feature<Point> {
+        try await client.perform(request: PointRequest(latitude: latitude, longitude: longitude))
     }
 }
