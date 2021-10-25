@@ -3,11 +3,11 @@ import WeatherAPI
 
 public extension SampleData {
 
-    static var gridpointForecast: Feature<GridpointForecast> {
-        try! decode(fromJSON: gridpointForecastSource)
+    static var sevenDayGridpointForecast: Feature<GridpointForecast> {
+        try! decode(fromJSON: sevenDayGridpointForecastSource)
     }
 
-    static let gridpointForecastSource = """
+    static let sevenDayGridpointForecastSource = """
 {
     "@context": [
         "https://geojson.org/geojson-ld/geojson-context.jsonld",

@@ -9,7 +9,7 @@ class GridpointForecastTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        forecast = SampleData.gridpointForecast.properties
+        forecast = SampleData.sevenDayGridpointForecast.properties
     }
 
     override func tearDown() {
