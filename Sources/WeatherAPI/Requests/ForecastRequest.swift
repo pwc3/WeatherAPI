@@ -19,6 +19,17 @@ public struct ForecastRequest: Request {
         self.hourly = hourly
     }
 
+    public init(for point: Feature<Point>, hourly: Bool) {
+        let pt = point.properties
+        self.init(
+            officeId: pt.forecastOfficeId,
+            gridX: pt.gridX,
+            gridY: pt.gridY,
+            hourly: hourly
+        )
+    }
+
+    @available(*, deprecated)
     public init(for point: Point, hourly: Bool) {
         self.init(
             officeId: point.forecastOfficeId,

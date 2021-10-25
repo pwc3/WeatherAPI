@@ -14,6 +14,9 @@ let package = Package(
         .library(
             name: "WeatherAPI",
             targets: ["WeatherAPI"]),
+        .library(
+            name: "SampleWeatherData",
+            targets: ["SampleWeatherData"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -25,8 +28,11 @@ let package = Package(
         .target(
             name: "WeatherAPI",
             dependencies: []),
+        .target(
+            name: "SampleWeatherData",
+            dependencies: ["WeatherAPI"]),
         .testTarget(
             name: "WeatherAPITests",
-            dependencies: ["WeatherAPI"]),
+            dependencies: ["WeatherAPI", "SampleWeatherData"]),
     ]
 )

@@ -10,6 +10,11 @@ public struct LatestObservationRequest: Request {
         self.stationId = stationId
     }
 
+    public init(for station: Feature<ObservationStation>) {
+        self.init(stationId: station.properties.stationIdentifier)
+    }
+
+    @available(*, deprecated)
     public init(for station: ObservationStation) {
         self.init(stationId: station.stationIdentifier)
     }

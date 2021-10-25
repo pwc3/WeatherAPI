@@ -16,6 +16,16 @@ public struct StationsRequest: Request {
         self.gridY = gridY
     }
 
+    public init(for point: Feature<Point>) {
+        let pt = point.properties
+        self.init(
+            officeId: pt.forecastOfficeId,
+            gridX: pt.gridX,
+            gridY: pt.gridY
+        )
+    }
+
+    @available(*, deprecated)
     public init(for point: Point) {
         self.init(
             officeId: point.forecastOfficeId,
