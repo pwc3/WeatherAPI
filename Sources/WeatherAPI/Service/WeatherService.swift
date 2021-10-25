@@ -19,4 +19,10 @@ public class WeatherService {
         let client = URLSessionRESTClient(baseURL: baseURL, headers: headers, logIncomingJSON: true)
         return WeatherService.init(client: client)
     }()
+
+    public func perform<RequestType, ResponseType>(request: RequestType) async throws -> ResponseType
+    where RequestType: Request, ResponseType == RequestType.ResponseType
+    {
+        return try await client.perform(request: request)
+    }
 }
