@@ -28,11 +28,11 @@ public struct Observation: Decodable, Equatable {
 
     public var minTemperatureLast24Hours: QuantitativeValue
 
-    public var precipitationLastHour: QuantitativeValue
+    public var precipitationLastHour: QuantitativeValue?
 
-    public var precipitationLast3Hours: QuantitativeValue
+    public var precipitationLast3Hours: QuantitativeValue?
 
-    public var precipitationLast6Hours: QuantitativeValue
+    public var precipitationLast6Hours: QuantitativeValue?
 
     public var relativeHumidity: QuantitativeValue
 

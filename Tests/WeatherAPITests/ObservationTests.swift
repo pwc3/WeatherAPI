@@ -8,7 +8,7 @@ class ObservationTests: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        let feature = try JSONDecoder.configuredDecoder().decode(Feature<Observation>.self, from: Self.example.data(using: .utf8)!)
+        let feature = try JSONDecoder.configuredDecoder().decode(Feature<Observation>.self, from: Self.example1.data(using: .utf8)!)
         observation = feature.properties
     }
 
@@ -81,17 +81,17 @@ class ObservationTests: XCTestCase {
 
     func testPrecipitationLastHour() throws {
         XCTAssertEqual(observation.precipitationLastHour, QuantitativeValue(unitCode: try Unit(string: "wmoUnit:m")))
-        XCTAssertNil(try observation.precipitationLastHour.length)
+        XCTAssertNil(try observation.precipitationLastHour?.length)
     }
 
     func testPrecipitationLast3Hours() throws {
         XCTAssertEqual(observation.precipitationLast3Hours, QuantitativeValue(unitCode: try Unit(string: "wmoUnit:m")))
-        XCTAssertNil(try observation.precipitationLast3Hours.length)
+        XCTAssertNil(try observation.precipitationLast3Hours?.length)
     }
 
     func testPrecipitationLast6Hours() throws {
         XCTAssertEqual(observation.precipitationLast6Hours, QuantitativeValue(unitCode: try Unit(string: "wmoUnit:m")))
-        XCTAssertNil(try observation.precipitationLast6Hours.length)
+        XCTAssertNil(try observation.precipitationLast6Hours?.length)
     }
 
     func testRelativeHumidity() throws {
@@ -120,10 +120,13 @@ class ObservationTests: XCTestCase {
                                   amount: .BKN))
     }
 
+    func testParseExample2() throws {
+        XCTAssertNoThrow(try JSONDecoder.configuredDecoder().decode(Feature<Observation>.self, from: Self.example2.data(using: .utf8)!))
+    }
 }
 
 extension ObservationTests {
-    private static let example = """
+    private static let example1 = """
 {
     "@context": [
         "https://geojson.org/geojson-ld/geojson-context.jsonld",
@@ -286,5 +289,146 @@ extension ObservationTests {
         ]
     }
 }
+"""
+
+    private static let example2 = """
+{
+    "@context": [
+        "https://geojson.org/geojson-ld/geojson-context.jsonld",
+        {
+            "@version": "1.1",
+            "wx": "https://api.weather.gov/ontology#",
+            "s": "https://schema.org/",
+            "geo": "http://www.opengis.net/ont/geosparql#",
+            "unit": "http://codes.wmo.int/common/unit/",
+            "@vocab": "https://api.weather.gov/ontology#",
+            "geometry": {
+                "@id": "s:GeoCoordinates",
+                "@type": "geo:wktLiteral"
+            },
+            "city": "s:addressLocality",
+            "state": "s:addressRegion",
+            "distance": {
+                "@id": "s:Distance",
+                "@type": "s:QuantitativeValue"
+            },
+            "bearing": {
+                "@type": "s:QuantitativeValue"
+            },
+            "value": {
+                "@id": "s:value"
+            },
+            "unitCode": {
+                "@id": "s:unitCode",
+                "@type": "@id"
+            },
+            "forecastOffice": {
+                "@type": "@id"
+            },
+            "forecastGridData": {
+                "@type": "@id"
+            },
+            "publicZone": {
+                "@type": "@id"
+            },
+            "county": {
+                "@type": "@id"
+            }
+        }
+    ],
+    "id": "https://api.weather.gov/stations/D7094/observations/2021-10-24T22:45:00+00:00",
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -122.55,
+            37.909999900000003
+        ]
+    },
+    "properties": {
+        "@id": "https://api.weather.gov/stations/D7094/observations/2021-10-24T22:45:00+00:00",
+        "@type": "wx:ObservationStation",
+        "elevation": {
+            "unitCode": "wmoUnit:m",
+            "value": 62.420000000000002
+        },
+        "station": "https://api.weather.gov/stations/D7094",
+        "timestamp": "2021-10-24T22:45:00+00:00",
+        "rawMessage": "",
+        "textDescription": "",
+        "icon": null,
+        "presentWeather": [],
+        "temperature": {
+            "unitCode": "wmoUnit:degC",
+            "value": null,
+            "qualityControl": "Z"
+        },
+        "dewpoint": {
+            "unitCode": "wmoUnit:degC",
+            "value": null,
+            "qualityControl": "Z"
+        },
+        "windDirection": {
+            "unitCode": "wmoUnit:degree_(angle)",
+            "value": null,
+            "qualityControl": "Z"
+        },
+        "windSpeed": {
+            "unitCode": "wmoUnit:km_h-1",
+            "value": null,
+            "qualityControl": "Z"
+        },
+        "windGust": {
+            "unitCode": "wmoUnit:km_h-1",
+            "value": null,
+            "qualityControl": "Z"
+        },
+        "barometricPressure": {
+            "unitCode": "wmoUnit:Pa",
+            "value": null,
+            "qualityControl": "Z"
+        },
+        "seaLevelPressure": {
+            "unitCode": "wmoUnit:Pa",
+            "value": null,
+            "qualityControl": "Z"
+        },
+        "visibility": {
+            "unitCode": "wmoUnit:m",
+            "value": null,
+            "qualityControl": "Z"
+        },
+        "maxTemperatureLast24Hours": {
+            "unitCode": "wmoUnit:degC",
+            "value": null
+        },
+        "minTemperatureLast24Hours": {
+            "unitCode": "wmoUnit:degC",
+            "value": null
+        },
+        "precipitationLast3Hours": {
+            "unitCode": "wmoUnit:m",
+            "value": null,
+            "qualityControl": "Z"
+        },
+        "relativeHumidity": {
+            "unitCode": "wmoUnit:percent",
+            "value": null,
+            "qualityControl": "Z"
+        },
+        "windChill": {
+            "unitCode": "wmoUnit:degC",
+            "value": null,
+            "qualityControl": "Z"
+        },
+        "heatIndex": {
+            "unitCode": "wmoUnit:degC",
+            "value": null,
+            "qualityControl": "Z"
+        },
+        "cloudLayers": []
+    }
+}
+
 """
 }
