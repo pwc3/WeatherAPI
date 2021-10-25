@@ -14,11 +14,6 @@ public struct LatestObservationRequest: Request {
         self.init(stationId: station.properties.stationIdentifier)
     }
 
-    @available(*, deprecated)
-    public init(for station: ObservationStation) {
-        self.init(stationId: station.stationIdentifier)
-    }
-
     public func buildURLRequest(baseURL: URLConvertible, headers: [String: String]) throws -> URLRequest {
         let url = try baseURL.asURL()
             .appendingPathComponent("stations")

@@ -29,16 +29,6 @@ public struct ForecastRequest: Request {
         )
     }
 
-    @available(*, deprecated)
-    public init(for point: Point, hourly: Bool) {
-        self.init(
-            officeId: point.forecastOfficeId,
-            gridX: point.gridX,
-            gridY: point.gridY,
-            hourly: hourly
-        )
-    }
-
     public func buildURLRequest(baseURL: URLConvertible, headers: [String: String]) throws -> URLRequest {
         let coordinate = String(format: "%d,%d", gridX, gridY)
         var url = try baseURL.asURL()

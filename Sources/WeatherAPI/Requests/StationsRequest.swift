@@ -25,15 +25,6 @@ public struct StationsRequest: Request {
         )
     }
 
-    @available(*, deprecated)
-    public init(for point: Point) {
-        self.init(
-            officeId: point.forecastOfficeId,
-            gridX: point.gridX,
-            gridY: point.gridY
-        )
-    }
-
     public func buildURLRequest(baseURL: URLConvertible, headers: [String: String]) throws -> URLRequest {
         let coordinate = String(format: "%d,%d", gridX, gridY)
         let url = try baseURL.asURL()
