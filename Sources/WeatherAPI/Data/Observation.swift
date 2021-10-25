@@ -2,7 +2,7 @@ import Foundation
 
 public struct Observation: Decodable, Equatable {
 
-    public var timestamp: String
+    public var timestamp: Date
 
     public var rawMessage: String
 

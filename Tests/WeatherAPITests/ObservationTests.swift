@@ -18,7 +18,7 @@ class ObservationTests: XCTestCase {
     }
 
     func testTimestamp() throws {
-        XCTAssertEqual(observation.timestamp, "2021-10-22T02:54:00+00:00")
+        XCTAssertEqual(observation.timestamp, try Date.fromISO8601("2021-10-22T02:54:00+00:00"))
     }
 
     func testRawMessage() throws {
