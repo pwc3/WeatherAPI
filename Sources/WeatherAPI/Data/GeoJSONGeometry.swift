@@ -27,6 +27,13 @@ public enum GeoJSONGeometry: Decodable, Equatable {
         }
     }
 
+    public var asCLLocationCoordinate2D: CLLocationCoordinate2D? {
+        guard case .point(let point) = self else {
+            return nil
+        }
+        return point.coordinate.asCLLocationCoordinate
+    }
+
     public var asMKMapPoint: MKMapPoint? {
         guard case .point(let point) = self else {
             return nil
