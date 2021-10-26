@@ -26,6 +26,20 @@ public enum GeoJSONGeometry: Decodable, Equatable {
             self = .unknown
         }
     }
+
+    public var asMKMapPoint: MKMapPoint? {
+        guard case .point(let point) = self else {
+            return nil
+        }
+        return point.asMKMapPoint
+    }
+
+    public var asMKPolygon: MKPolygon? {
+        guard case .polygon(let polygon) = self else {
+            return nil
+        }
+        return polygon.asMKPolygon
+    }
 }
 
 public struct Geometry<CoordinateType>: Decodable, Equatable
