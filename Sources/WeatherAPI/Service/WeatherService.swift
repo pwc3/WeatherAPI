@@ -23,6 +23,7 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
+import Combine
 import Foundation
 
 public class WeatherService {
@@ -49,6 +50,12 @@ public class WeatherService {
     where RequestType: Request, ResponseType == RequestType.ResponseType
     {
         return try await client.perform(request: request)
+    }
+
+    public func responsePublisher<RequestType, ResponseType>(for request: RequestType) -> AnyPublisher<ResponseType, Error>
+    where RequestType: Request, ResponseType == RequestType.ResponseType
+    {
+        return client.responsePublisher(for: request)
     }
 }
 

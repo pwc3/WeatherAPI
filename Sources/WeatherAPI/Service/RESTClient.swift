@@ -23,11 +23,15 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
+import Combine
 import Foundation
 
 public protocol RESTClient {
 
     func perform<RequestType, ResponseType>(request: RequestType) async throws -> ResponseType
+    where RequestType: Request, ResponseType == RequestType.ResponseType
+
+    func responsePublisher<RequestType, ResponseType>(for request: RequestType) -> AnyPublisher<ResponseType, Error>
     where RequestType: Request, ResponseType == RequestType.ResponseType
 }
 
