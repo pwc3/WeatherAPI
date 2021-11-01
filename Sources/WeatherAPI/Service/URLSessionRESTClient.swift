@@ -23,6 +23,7 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
+import Combine
 import Foundation
 import os
 
@@ -59,7 +60,7 @@ public class URLSessionRESTClient: RESTClient {
         guard let httpResponse = response as? HTTPURLResponse else {
             throw ServiceError.invalidResponse
         }
-        guard httpResponse.statusCode == 200 else {
+        guard (200..<300).contains(httpResponse.statusCode) else {
             throw ServiceError.errorStatusCode(httpResponse.statusCode)
         }
 
@@ -68,6 +69,38 @@ public class URLSessionRESTClient: RESTClient {
         }
 
         return try JSONDecoder.configuredDecoder().decode(ResponseType.self, from: data)
+    }
+
+    public func responsePublisher<RequestType, ResponseType>(for request: RequestType) -> AnyPublisher<ResponseType, Error>
+    where RequestType: Request, ResponseType == RequestType.ResponseType
+    {
+        let logIncomingJSON = self.logIncomingJSON
+
+        do {
+            let urlRequest = try request.buildURLRequest(baseURL: baseURL, headers: headers)
+            return session.dataTaskPublisher(for: urlRequest)
+                .tryMap { (data, response) throws -> Data in
+                    guard let httpResponse = response as? HTTPURLResponse else {
+                        throw ServiceError.invalidResponse
+                    }
+                    guard (200..<300).contains(httpResponse.statusCode) else {
+                        throw ServiceError.errorStatusCode(httpResponse.statusCode)
+                    }
+                    return data
+                }
+                .map {
+                    if logIncomingJSON, let string = String(data: $0, encoding: .utf8) {
+                        Log.service.debug("Received JSON for \(urlRequest): \(string)")
+                    }
+                    return $0
+                }
+                .decode(type: ResponseType.self, decoder: JSONDecoder.configuredDecoder())
+                .eraseToAnyPublisher()
+        }
+        catch {
+            return Fail(error: error)
+                .eraseToAnyPublisher()
+        }
     }
 }
 
