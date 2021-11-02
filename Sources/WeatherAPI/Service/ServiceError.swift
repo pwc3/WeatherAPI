@@ -32,3 +32,15 @@ public enum ServiceError: Error {
     case errorStatusCode(Int)
 }
 
+extension ServiceError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .invalidResponse:
+            return NSLocalizedString("An invalid response was received", comment: "ServiceError.invalidResponse description")
+
+        case .errorStatusCode(let code):
+            return String(format: NSLocalizedString("The server responded with error code %d", comment: "ServiceError.errorStatusCode description"),
+                          code)
+        }
+    }
+}

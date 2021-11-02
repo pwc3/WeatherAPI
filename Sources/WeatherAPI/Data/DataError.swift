@@ -32,3 +32,14 @@ public enum DataError: Error {
     case unexpectedUnit(Unit)
 }
 
+extension DataError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .malformedInput:
+            return NSLocalizedString("Received malformed input", comment: "DataError.malformedError description")
+
+        case .unexpectedUnit:
+            return NSLocalizedString("The value has an unexpected unit associated with it", comment: "DataError.unexpectedUnit description")
+        }
+    }
+}

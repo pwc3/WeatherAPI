@@ -31,8 +31,15 @@ public protocol URLConvertible {
     func asURL() throws -> URL
 }
 
-public enum URLConvertibleError: Error {
+public enum URLConvertibleError: Error, LocalizedError {
     case invalidURL(URLConvertible)
+
+    public var errorDescription: String? {
+        switch self {
+        case .invalidURL:
+            return NSLocalizedString("Unable to convert URL", comment: "URLConvertibleError.invalidURL description")
+        }
+    }
 }
 
 extension String: URLConvertible {
