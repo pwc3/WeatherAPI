@@ -35,7 +35,7 @@ public class WeatherService {
 
     public static var `default`: WeatherService = {
         let headers: [String: String] = [
-            "User-Agent": "(rocketinsights.com, paul@rocketinsights.com)",
+            "User-Agent": "(rocketinsights.com, aloha@rocketinsights.com)",
             "Accept": "application/geo+json"
         ]
 
